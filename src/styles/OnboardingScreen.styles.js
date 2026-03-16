@@ -53,26 +53,29 @@ const getOnboardingStyles = (colors) => StyleSheet.create({
         zIndex: 1,
     },
     headerCenteredTitle: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        textAlign: 'center',
         fontSize: Typography.size.xl,
         fontWeight: Typography.weight.bold,
         color: colors.textPrimary,
         letterSpacing: Typography.tracking.tight,
-        zIndex: 0,
+        flex: 1,
+        textAlign: 'center',
+        marginRight: 28, // Offset the back button width to keep text truly centered in row
     },
 
     // ── Illustration: icon variant (slide 1, 3) ──────────────────────────────
     illustrationWrapper: {
         alignItems: 'center',
         marginTop: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.15,
+        shadowRadius: 20,
+        elevation: 8,
     },
     illustrationIconContainer: {
         width: ILLUSTRATION_SIZE,
-        height: ILLUSTRATION_SIZE * 0.82,
-        borderRadius: 20,
+        height: ILLUSTRATION_SIZE * 0.95,
+        borderRadius: 24,
         backgroundColor: colors.backgroundCard,
         alignItems: 'center',
         justifyContent: 'center',
@@ -81,14 +84,15 @@ const getOnboardingStyles = (colors) => StyleSheet.create({
     // ── Illustration: photo variant (slide 2) ────────────────────────────────
     illustrationPhoto: {
         width: ILLUSTRATION_SIZE,
-        height: ILLUSTRATION_SIZE * 0.82,
-        borderRadius: 20,
+        height: ILLUSTRATION_SIZE * 0.95,
+        borderRadius: 24,
         resizeMode: 'cover',
+        backgroundColor: colors.backgroundCard,
     },
     illustrationPhotoPlaceholder: {
         width: ILLUSTRATION_SIZE,
-        height: ILLUSTRATION_SIZE * 0.82,
-        borderRadius: 20,
+        height: ILLUSTRATION_SIZE * 0.95,
+        borderRadius: 24,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -132,7 +136,7 @@ const getOnboardingStyles = (colors) => StyleSheet.create({
     footerArrow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         paddingHorizontal: 28,
         paddingBottom: 40,
         paddingTop: 16,

@@ -32,7 +32,6 @@ function ThemedStatusBar() {
   return <StatusBar style={isDark ? "light" : "dark"} backgroundColor={colors.backgroundPrimary} />;
 }
 
-
 const SCREENS = {
   SPLASH: 'splash',
   ONBOARDING: 'onboarding',
@@ -53,23 +52,31 @@ const SCREENS = {
   NOTIFICATION_SETTINGS: 'notification_settings',
   PRIVACY_POLICY: 'privacy_policy',
   DATA: 'data',
+  ACCEPT_PRIVACY: 'accept_privacy',
 };
 
 export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
+
+function AppContent() {
+  const { colors } = useTheme();
   const [screen, setScreen] = useState(SCREENS.SPLASH);
   const [history, setHistory] = useState([]);
   const [authData, setAuthData] = useState(null);
-  const [lastTransaction, setLastTransaction] = useState(null);  // passed to success screen
-  const [transactionToEdit, setTransactionToEdit] = useState(null); // passed to edit screen
+  const [lastTransaction, setLastTransaction] = useState(null);
+  const [transactionToEdit, setTransactionToEdit] = useState(null);
   const [reportData, setReportData] = useState(null);
   const [selectedNotification, setSelectedNotification] = useState(null);
 
   useEffect(() => {
-    // Allow screenshots globally for all screens (including password fields on Android)
     let subscription;
     const enableCapture = async () => {
       await ScreenCapture.allowScreenCaptureAsync();
-      // Also use the subscription-based approach so it persists
       subscription = ScreenCapture.addScreenshotListener(() => {});
     };
     enableCapture();
@@ -78,7 +85,6 @@ export default function App() {
 
   const navigate = useCallback((target, clearHistory = false) => {
     setScreen((prevScreen) => {
-      // Prevent duplicate consecutive entries
       if (prevScreen !== target) {
         if (clearHistory) {
           setHistory([]);
@@ -90,19 +96,15 @@ export default function App() {
     });
   }, []);
 
-  // Handle Android hardware back button
   useEffect(() => {
     const onBackPress = () => {
-      // If we are at root-level screens, let it exit
       if ([SCREENS.HOME, SCREENS.WELCOME, SCREENS.ONBOARDING, SCREENS.SPLASH].includes(screen)) {
         return false;
       }
-      // If we are on login/register, go to welcome
       if (screen === SCREENS.LOGIN || screen === SCREENS.REGISTER) {
         navigate(SCREENS.WELCOME);
         return true;
       }
-      // If we have history, pop to previous
       if (history.length > 0) {
         setHistory((prev) => {
           const newHist = [...prev];
@@ -110,16 +112,14 @@ export default function App() {
           setScreen(prevScreen);
           return newHist;
         });
-        return true; // We handled it
+        return true;
       }
       return false;
     };
-
     const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => subscription.remove();
-  }, [screen, history]);
+  }, [screen, history, navigate]);
 
-  /** Shared BottomNav / tab router */
   const handleTabNav = (tab) => {
     switch (tab) {
       case 'home': navigate(SCREENS.HOME); break;
@@ -137,22 +137,20 @@ export default function App() {
   const handleAuthSuccess = (data) => {
     setAuthData(data);
     setAuthToken(data.access);
-    navigate(SCREENS.HOME, true); // true = clear history
+    navigate(SCREENS.HOME, true);
   };
 
   const handleLogout = () => {
     setAuthData(null);
     setAuthToken(null);
-    navigate(SCREENS.WELCOME, true); // true = clear history
+    navigate(SCREENS.WELCOME, true);
   };
 
-  /** Called by AddTransactionScreen after a successful save */
   const handleSaveSuccess = (transaction) => {
     setLastTransaction(transaction);
     navigate(SCREENS.TRANSACTION_SUCCESS);
   };
 
-  /** Called by HomeScreen when a transaction is pressed */
   const handleEditTransaction = (transaction) => {
     setTransactionToEdit(transaction);
     navigate(SCREENS.EDIT_TRANSACTION);
@@ -167,7 +165,6 @@ export default function App() {
         category_id: txnData.category ? txnData.category.id : null,
       };
       if (!payload.category_id) delete payload.category_id;
-
       const res = await transactionService.createTransaction(payload);
       setLastTransaction(res);
       navigate(SCREENS.TRANSACTION_SUCCESS);
@@ -189,13 +186,16 @@ export default function App() {
     }
   }, [history, navigate]);
 
+  const handleSplashComplete = useCallback(() => {
+    navigate(SCREENS.ONBOARDING);
+  }, [navigate]);
+
   return (
-    <ThemeProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemedStatusBar />
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.backgroundPrimary }}>
+      <ThemedStatusBar />
 
       {screen === SCREENS.SPLASH && (
-        <SplashScreen onComplete={() => navigate(SCREENS.ONBOARDING)} />
+        <SplashScreen onComplete={handleSplashComplete} />
       )}
 
       {screen === SCREENS.ONBOARDING && (
@@ -221,7 +221,18 @@ export default function App() {
         <RegisterScreen
           onBack={() => navigate(SCREENS.WELCOME)}
           onSignInPress={() => navigate(SCREENS.LOGIN)}
-          onRegisterSuccess={handleAuthSuccess}
+          onRegisterSuccess={(data) => {
+            setAuthData(data);
+            setAuthToken(data.access);
+            navigate(SCREENS.ACCEPT_PRIVACY, true);
+          }}
+        />
+      )}
+
+      {screen === SCREENS.ACCEPT_PRIVACY && (
+        <PrivacyPolicyScreen
+          isAcceptanceMode
+          onAccept={() => navigate(SCREENS.HOME, true)}
         />
       )}
 
@@ -351,6 +362,5 @@ export default function App() {
         />
       )}
     </GestureHandlerRootView>
-    </ThemeProvider>
   );
 }

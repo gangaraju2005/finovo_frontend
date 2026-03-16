@@ -167,13 +167,13 @@ export default function AddTransactionScreen({ onCancel, onSaveSuccess }) {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 24}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 40}
         >
             <ScrollView
                 contentContainerStyle={[
                     styles.scrollContent,
-                    keyboardVisible && { paddingBottom: 250 }
+                    keyboardVisible && { paddingBottom: 20 }
                 ]}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
