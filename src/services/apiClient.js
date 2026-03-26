@@ -13,7 +13,7 @@ const apiClient = axios.create({
     // baseURL: 'http://192.168.1.117:8000/api',
     // baseURL: 'http://98.92.128.133:8000',
     // baseURL: process.env.EXPO_PUBLIC_API_URL,
-    baseURL: "http://98.92.128.133:8000/api",
+    baseURL: "http://98.92.128.133/api",
     timeout: 60000,
 });
 
