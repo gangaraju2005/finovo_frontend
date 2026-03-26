@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/app-adaptive.png",
         "backgroundColor": "#171717"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

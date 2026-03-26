@@ -6,6 +6,7 @@ import apiClient from './apiClient';
 /**
  * Log in with email and password.
  */
+
 const login = async (email, password) => {
     try {
         const response = await apiClient.post('/auth/login/', { email, password });
