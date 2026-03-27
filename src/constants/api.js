@@ -21,8 +21,9 @@ if (hostUri) {
 // Environment Switcher
 // To use production, create a .env file with EXPO_PUBLIC_API_URL set.
 // export const BASE_URL = process.env.EXPO_PUBLIC_API_URL || `http://${LOCAL_IP}:8000/api`;
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL || "http://98.92.128.133/api"; // Default to local IP if env var is not set
+const BASE_URL="http://98.92.128.133/api";
+// const BASE_URL =
+//   process.env.EXPO_PUBLIC_API_URL || "http://98.92.128.133/api"; // Default to local IP if env var is not set
 export const MEDIA_BASE_URL = process.env.EXPO_PUBLIC_MEDIA_URL || `http://${LOCAL_IP}:8000`; // No trailing slash - Django provides /media/...
 
 export default BASE_URL;

@@ -16,12 +16,13 @@
       "supportsTablet": true
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-adaptive.png",
         "backgroundColor": "#171717"
       },
       "edgeToEdgeEnabled": true,
-      "usesCleartextTraffic": true,
+      
       "package": "com.gangaraju_2005.finovofrontend"
     },
     "web": {
